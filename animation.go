@@ -22,11 +22,10 @@ type RippleAnimation struct {
 }
 
 func (a *RippleAnimation) Length() int {
-	return max(a.Width, a.Height)
+	return int(math.Sqrt(float64(a.Width*a.Width + a.Height*a.Height)))
 }
 
 func (a *RippleAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
-	// math.Sin(float64(frame))
 	epsilon := 8.0
 	rippleDistance := float64(frame)
 	floatWidth := float64(x-banner.Width/2) / float64(banner.Width)
