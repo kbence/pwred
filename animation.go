@@ -9,6 +9,13 @@ func max(a, b int) int {
 	return b
 }
 
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
 type Animation interface {
 	Length() int
 	RuneAtPos(x, y int, frame int, banner *Banner) rune

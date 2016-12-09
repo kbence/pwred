@@ -15,7 +15,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	banner := LoadBannerList(args[0]).SelectRandom()
+	width, height := GetTerminalDimensions()
+	banner := LoadBannerList(args[0]).SelectRandom().Crop(width, height-1)
 	animator := NewAnimator(banner, &RippleAnimation{Width: banner.Width, Height: banner.Height})
 	animator.Animate()
 }

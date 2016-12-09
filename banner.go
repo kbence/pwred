@@ -68,6 +68,17 @@ func (b *Banner) Transform(function TransformFunc) *Banner {
 	return banner
 }
 
+func (b *Banner) Crop(width, height int) *Banner {
+	banner := &Banner{Width: min(b.Width, width), Height: min(b.Height, height)}
+
+	for y := 0; y < height && y < b.Height; y++ {
+		line := b.Lines[y]
+		banner.Lines = append(banner.Lines, line[0:min(len(line), width)])
+	}
+
+	return banner
+}
+
 type BannerList struct {
 	Banners []*Banner
 }
