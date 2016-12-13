@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 )
 
 func main() {
@@ -16,7 +17,9 @@ func main() {
 	}
 
 	width, height := GetTerminalDimensions()
-	banner := LoadBannerList(args[0]).SelectRandom().Crop(width, height-1)
-	animator := NewAnimator(banner, &RippleAnimation{Width: banner.Width, Height: banner.Height})
+	settings := &AnimationSettings{Width: width, Height: height - 1, Fps: 30, Duration: 1 * time.Second}
+
+	banner := LoadBannerList(args[0]).SelectRandom().Crop(settings.Width, settings.Height-1)
+	animator := NewAnimator(banner, GetRandomAnimation(settings), settings)
 	animator.Animate()
 }

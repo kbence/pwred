@@ -5,11 +5,11 @@ import "time"
 type Animator struct {
 	Banner    *Banner
 	Animation Animation
-	Fps       int
+	Settings  *AnimationSettings
 }
 
-func NewAnimator(banner *Banner, animation Animation) *Animator {
-	return &Animator{Banner: banner, Animation: animation, Fps: 100}
+func NewAnimator(banner *Banner, animation Animation, settings *AnimationSettings) *Animator {
+	return &Animator{Banner: banner, Animation: animation, Settings: settings}
 }
 
 func (a *Animator) Animate() {
@@ -22,7 +22,7 @@ func (a *Animator) Animate() {
 			return a.Animation.RuneAtPos(x, y, frame, a.Banner)
 		}).Print()
 
-		time.Sleep(time.Duration(int(time.Second) / a.Fps))
+		time.Sleep(time.Duration(int(time.Second) / a.Settings.Fps))
 
 		if frame < animLength-1 {
 			GoTo(DirUp, a.Banner.Height)

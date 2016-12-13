@@ -17,26 +17,35 @@ func init() {
 type Banner struct {
 	Width  int
 	Height int
-	Lines  []string
+	Lines  [][]rune
 }
 
 type TransformFunc func(x, y int, r rune) rune
 
 func NewBanner(lines []string) *Banner {
 	width := 0
+	runes := [][]rune{}
 
 	for _, line := range lines {
-		if len(line) > width {
-			width = len(line)
+		runeLine := []rune{}
+
+		for _, r := range line {
+			runeLine = append(runeLine, r)
 		}
+
+		if len(runeLine) > width {
+			width = len(runeLine)
+		}
+
+		runes = append(runes, runeLine)
 	}
 
-	return &Banner{Width: width, Height: len(lines), Lines: lines}
+	return &Banner{Width: width, Height: len(runes), Lines: runes}
 }
 
 func (b *Banner) Print() {
 	for _, line := range b.Lines {
-		fmt.Println(line)
+		fmt.Println(string(line))
 	}
 }
 
@@ -62,7 +71,7 @@ func (b *Banner) Transform(function TransformFunc) *Banner {
 			line[x] = function(x, y, b.GetRune(x, y))
 		}
 
-		banner.Lines = append(banner.Lines, string(line))
+		banner.Lines = append(banner.Lines, line)
 	}
 
 	return banner
