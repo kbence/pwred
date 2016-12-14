@@ -113,6 +113,10 @@ func LoadBannerList(filename string) *BannerList {
 		}
 
 		if err != nil {
+			if len(line) > 0 {
+				currentBannerLines = append(currentBannerLines, line)
+			}
+
 			if err == io.EOF {
 				break
 			}
