@@ -15,8 +15,6 @@ func NewAnimator(banner *Banner, animation Animation, settings *AnimationSetting
 func (a *Animator) Animate() {
 	animLength := a.Animation.Length()
 
-	Invisible()
-
 	for frame := 0; frame < animLength; frame++ {
 		a.Banner.Transform(func(x, y int, r rune) rune {
 			return a.Animation.RuneAtPos(x, y, frame, a.Banner)
@@ -28,6 +26,4 @@ func (a *Animator) Animate() {
 			GoTo(DirUp, a.Banner.Height)
 		}
 	}
-
-	Reset()
 }

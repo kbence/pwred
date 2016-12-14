@@ -32,11 +32,3 @@ func GoTo(dir direction, amount int) {
 
 	fmt.Printf("\033[%d%c", amount, dirSpec)
 }
-
-func Invisible() {
-	fmt.Printf("\033[8m")
-}
-
-func Reset() {
-	fmt.Printf("\033(B\033[m")
-}
