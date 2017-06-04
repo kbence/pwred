@@ -20,12 +20,15 @@ func main() {
 	}
 
 	width, height := GetTerminalDimensions()
-	settings := &AnimationSettings{
-		Width: width, Height: height - 1,
-		Fps:      *fps,
-		Duration: time.Duration(*duration) * time.Second}
+	banner := LoadBannerList(args[0]).SelectRandom().Crop(width, height-1)
 
-	banner := LoadBannerList(args[0]).SelectRandom().Crop(settings.Width, settings.Height-1)
+	settings := &AnimationSettings{
+		Width:    width,
+		Height:   height - 1,
+		Fps:      *fps,
+		Duration: time.Duration(*duration) * time.Second,
+		Banner:   banner}
+
 	animator := NewAnimator(banner, GetRandomAnimation(settings), settings)
 	animator.Animate()
 }

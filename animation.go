@@ -25,6 +25,7 @@ type AnimationSettings struct {
 	Height   int
 	Fps      int
 	Duration time.Duration
+	Banner   *Banner
 }
 
 func (s *AnimationSettings) Length() int {
@@ -77,14 +78,10 @@ func randInts(length, min, max int) []int {
 var shadeCharacters = []rune{' ', '░', '▒', '▓', '█'}
 
 type RippleAnimation struct {
-	Width  int
-	Height int
 	length int
 }
 
 func (a *RippleAnimation) Initialize(settings *AnimationSettings) {
-	a.Width = settings.Width
-	a.Height = settings.Height
 	a.length = settings.Length()
 }
 
@@ -111,20 +108,18 @@ func (a *RippleAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
 }
 
 type SparklingAnimation struct {
-	Width      int
-	Height     int
+	width      int
 	thresholds []int
 	length     int
 	shadeChars []rune
 }
 
 func (a *SparklingAnimation) Initialize(settings *AnimationSettings) {
-	a.Width = settings.Width
-	a.Height = settings.Height
-	a.thresholds = rand.Perm(settings.Width * settings.Height)
+	a.width = settings.Banner.Width
+	a.thresholds = rand.Perm(settings.Banner.Width * settings.Height)
 	a.length = settings.Length()
 	a.shadeChars = append(shadeCharacters[0:len(shadeCharacters)], reverseRunes(shadeCharacters)...)
-	a.thresholds = randInts(settings.Width*settings.Height, 1, a.length-len(a.shadeChars)-1)
+	a.thresholds = randInts(settings.Banner.Width*settings.Height, 1, a.length-len(a.shadeChars)-1)
 }
 
 func (a *SparklingAnimation) Length() int {
@@ -134,7 +129,7 @@ func (a *SparklingAnimation) Length() int {
 func (a *SparklingAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
 	threshold := frame
 	startThreshold := (frame - len(a.shadeChars) - 1)
-	value := a.thresholds[y*a.Width+x]
+	value := a.thresholds[y*a.width+x]
 
 	if value <= startThreshold {
 		return banner.GetRune(x, y)
