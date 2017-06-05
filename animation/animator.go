@@ -1,14 +1,19 @@
-package main
+package animation
 
-import "time"
+import (
+	"time"
+
+	"github.com/kbence/pwred/banner"
+	"github.com/kbence/pwred/terminal"
+)
 
 type Animator struct {
-	Banner    *Banner
+	Banner    *banner.Banner
 	Animation Animation
 	Settings  *AnimationSettings
 }
 
-func NewAnimator(banner *Banner, animation Animation, settings *AnimationSettings) *Animator {
+func NewAnimator(banner *banner.Banner, animation Animation, settings *AnimationSettings) *Animator {
 	return &Animator{Banner: banner, Animation: animation, Settings: settings}
 }
 
@@ -23,7 +28,7 @@ func (a *Animator) Animate() {
 		time.Sleep(time.Duration(int(time.Second) / a.Settings.Fps))
 
 		if frame < animLength-1 {
-			GoTo(DirUp, a.Banner.Height)
+			terminal.GoTo(terminal.DirUp, a.Banner.Height)
 		}
 	}
 }

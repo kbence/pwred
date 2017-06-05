@@ -1,31 +1,20 @@
-package main
+package animation
 
 import (
 	"math"
 	"math/rand"
 	"time"
+
+	"github.com/kbence/pwred/banner"
+	"github.com/kbence/pwred/utils"
 )
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a > b {
-		return b
-	}
-	return a
-}
 
 type AnimationSettings struct {
 	Width    int
 	Height   int
 	Fps      int
 	Duration time.Duration
-	Banner   *Banner
+	Banner   *banner.Banner
 }
 
 func (s *AnimationSettings) Length() int {
@@ -35,7 +24,7 @@ func (s *AnimationSettings) Length() int {
 type Animation interface {
 	Initialize(settings *AnimationSettings)
 	Length() int
-	RuneAtPos(x, y int, frame int, banner *Banner) rune
+	RuneAtPos(x, y int, frame int, banner *banner.Banner) rune
 }
 
 func GetRandomAnimation(settings *AnimationSettings) Animation {
@@ -92,12 +81,12 @@ func (a *RippleAnimation) Length() int {
 	return a.length
 }
 
-func (a *RippleAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
+func (a *RippleAnimation) RuneAtPos(x, y int, frame int, banner *banner.Banner) rune {
 	epsilon := 8.0
-	rippleDistance := float64(frame) / float64(a.length) * float64(max(banner.Width, banner.Height))
+	rippleDistance := float64(frame) / float64(a.length) * float64(utils.Max(banner.Width, banner.Height))
 	floatWidth := float64(x-banner.Width/2) / float64(banner.Width)
 	floatHeight := float64(y-banner.Height/2) / float64(banner.Height)
-	distance := math.Sqrt(floatWidth*floatWidth+floatHeight*floatHeight) * float64(max(banner.Width, banner.Height))
+	distance := math.Sqrt(floatWidth*floatWidth+floatHeight*floatHeight) * float64(utils.Max(banner.Width, banner.Height))
 
 	if distance <= rippleDistance+epsilon && distance >= rippleDistance-epsilon {
 		strength := 0.99 * math.Cos((distance-rippleDistance)/(2*epsilon)*math.Pi)
@@ -129,7 +118,7 @@ func (a *SparklingAnimation) Length() int {
 	return a.length
 }
 
-func (a *SparklingAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
+func (a *SparklingAnimation) RuneAtPos(x, y int, frame int, banner *banner.Banner) rune {
 	threshold := frame
 	startThreshold := (frame - len(a.shadeChars) - 1)
 	value := a.thresholds[y*a.width+x]
@@ -165,11 +154,11 @@ func (a *DoomAnimation) Length() int {
 	return a.length
 }
 
-func (a *DoomAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
+func (a *DoomAnimation) RuneAtPos(x, y int, frame int, banner *banner.Banner) rune {
 	offset := a.startPositions[x] * (a.length - frame + 1) / a.length
 
 	if y+offset > a.height {
-		return shadeCharacters[max(0, min(len(shadeCharacters)-1, y+offset-a.height))]
+		return shadeCharacters[utils.Max(0, utils.Min(len(shadeCharacters)-1, y+offset-a.height))]
 	}
 
 	return banner.GetRune(x, y+offset)

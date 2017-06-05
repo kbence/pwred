@@ -1,4 +1,4 @@
-package main
+package banner
 
 import (
 	"bufio"
@@ -8,6 +8,8 @@ import (
 	"math/rand"
 	"os"
 	"time"
+
+	"github.com/kbence/pwred/utils"
 )
 
 func init() {
@@ -78,11 +80,11 @@ func (b *Banner) Transform(function TransformFunc) *Banner {
 }
 
 func (b *Banner) Crop(width, height int) *Banner {
-	banner := &Banner{Width: min(b.Width, width), Height: min(b.Height, height)}
+	banner := &Banner{Width: utils.Min(b.Width, width), Height: utils.Min(b.Height, height)}
 
 	for y := 0; y < height && y < b.Height; y++ {
 		line := b.Lines[y]
-		banner.Lines = append(banner.Lines, line[0:min(len(line), width)])
+		banner.Lines = append(banner.Lines, line[0:utils.Min(len(line), width)])
 	}
 
 	return banner
