@@ -41,12 +41,15 @@ type Animation interface {
 func GetRandomAnimation(settings *AnimationSettings) Animation {
 	var anim Animation
 
-	switch rand.Int() % 2 {
+	switch rand.Int() % 3 {
 	case 0:
 		anim = &RippleAnimation{}
 		break
 	case 1:
 		anim = &SparklingAnimation{}
+		break
+	case 2:
+		anim = &DoomAnimation{}
 		break
 	}
 
@@ -144,4 +147,30 @@ func (a *SparklingAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune
 	}
 
 	return ' '
+}
+
+type DoomAnimation struct {
+	length         int
+	height         int
+	startPositions []int
+}
+
+func (a *DoomAnimation) Initialize(settings *AnimationSettings) {
+	a.length = settings.Length() * 2
+	a.height = settings.Banner.Height
+	a.startPositions = randInts(settings.Banner.Width, 2*a.height, 3*a.height)
+}
+
+func (a *DoomAnimation) Length() int {
+	return a.length
+}
+
+func (a *DoomAnimation) RuneAtPos(x, y int, frame int, banner *Banner) rune {
+	offset := a.startPositions[x] * (a.length - frame + 1) / a.length
+
+	if y+offset > a.height {
+		return shadeCharacters[max(0, min(len(shadeCharacters)-1, y+offset-a.height))]
+	}
+
+	return banner.GetRune(x, y+offset)
 }
